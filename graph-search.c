@@ -3,6 +3,9 @@
 
 #define max_Vertex 10
 int visited_Depth[max_Vertex]; //Depth First Search의 방문여부를 저장할 배열
+int visited_Breath[max_Vertex]; // Breath First Search의 방문여부를 저장할 배열
+
+int visited[max_Vertex];
 
 //필요한 헤더파일 추가
 typedef struct graphNode {
@@ -24,6 +27,7 @@ void printGraph(HeadNode* Graph);
 int freeGraph(HeadNode* graph);
 int insertEdge(HeadNode* Graph, int v, int u);
 void Depth(HeadNode *Graph, int v);
+void bfs (HeadNode *g, int v);
 
 int main()
 {
@@ -32,9 +36,9 @@ int main()
 	int vertex;
     HeadNode* Graph = NULL;
 
-	printf("[----- [조정동] [2017015041] -----]\n");
+	printf("[----- [Cho Jeong Dong] [2017015041] -----]\n");
 	do{
-		printf("\n\n");
+		printf("\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                     	 Graph Searches	                        \n");
 		printf("----------------------------------------------------------------\n");
@@ -72,6 +76,15 @@ int main()
 			Depth(Graph, vertex); 
 		break;
 
+		case 'b' : case 'B':
+		printf("Enter the vertex you want to explore: = ");
+			scanf("%d", &v);
+			bfs(Graph,v); //너비우선탐색
+			printf("\n");
+			//너비우선탐색 후 visitied 배열 초기화 - 안하면 계속 탐색 불가
+			for(int i=0;i<max_Vertex;i++)
+				visited[i]=0;
+		break;
 		case 'p': case 'P':
 			printGraph(Graph);
 			break;
@@ -168,15 +181,14 @@ int insertEdge(HeadNode* Graph, int u, int v)
 	node->link = Graph->headNode[u];
 	Graph->headNode[u] = node;
 	return 0;
-
 	
 }
 
 void Depth(HeadNode* Graph,int v)
 {
 	GraphNode* w;
-	visited_Depth[v]=1; //vertex를 방문했음을 표시
-	printf("%d ",v); //방문한 vertex 출력
+	visited_Depth[v]=1; //노드를 방문했음을 표시
+	printf("%d ",v); //방문한 노드 출력
 
 	for(w=Graph->headNode[v];w;w=w->link)
 	{
@@ -186,6 +198,27 @@ void Depth(HeadNode* Graph,int v)
 }
 
 
+void bfs (HeadNode *g, int v)
+{
+    int queue[max_Vertex];
+    int rear=0;
+    int front=0;
 
+    GraphNode *ptr=g->headNode[v];
+    visited_Breath[v]=1; //노드를 방문했음을 표시
+    printf("%d ",v); //방문한 노드 출력
+    queue[rear++]= v; //큐에 vertex 입력
+
+    while(front!=rear){
+        v=queue[++front];
+        for (;ptr;ptr=ptr->link){
+            if(!visited_Breath[ptr->vertex]){ //노드를 방문하지 않을 경우
+                printf("%d ", ptr->vertex);
+                queue[rear++]=ptr->vertex; //큐에 vertex 입력
+                visited_Breath[ptr->vertex]=1;
+            }
+        }
+    }
+}
 
 
