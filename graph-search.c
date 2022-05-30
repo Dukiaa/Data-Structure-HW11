@@ -2,6 +2,7 @@
 #include<stdlib.h>
 
 #define max_Vertex 10
+int visited_Depth[max_Vertex]; //Depth First Search의 방문여부를 저장할 배열
 
 //필요한 헤더파일 추가
 typedef struct graphNode {
@@ -12,6 +13,7 @@ typedef struct graphNode {
 typedef struct headNode {
 	int n;
 	GraphNode* headNode[max_Vertex];
+	 GraphNode* Vlist[max_Vertex];
 } HeadNode;
 
 
@@ -20,13 +22,14 @@ void initialize(HeadNode** );
 int insertVertex(HeadNode* Graph);
 void printGraph(HeadNode* Graph);
 int freeGraph(HeadNode* graph);
-int insertEdge(HeadNode* Graph, int v1, int v2);
-
+int insertEdge(HeadNode* Graph, int v, int u);
+void Depth(HeadNode *Graph, int v);
 
 int main()
 {
 	char command;
 	int u, v;
+	int vertex;
     HeadNode* Graph = NULL;
 
 	printf("[----- [조정동] [2017015041] -----]\n");
@@ -55,12 +58,19 @@ int main()
 			insertVertex(Graph);
 			break;
 		case 'e' : case 'E':
-			printf("Enter two vertices = ");
-			scanf("%d %d", &u, &v);
+			printf("Enter two vertices\n\n");
+			printf("u: ");
+			scanf("%d", &u); //vertex u 입력
+			printf("v: ");
+			scanf("%d", &v); //vertex v 입력
 			insertEdge(Graph, u, v);
 			insertEdge(Graph, v, u);
 		break;
-
+		case 'd' : case 'D':
+		printf("Enter the vertex you want to explore: ");
+			scanf("%d", &vertex); //탐색하고자 하는 vertex 입력
+			Depth(Graph, vertex); 
+		break;
 
 		case 'p': case 'P':
 			printGraph(Graph);
@@ -119,11 +129,11 @@ void printGraph(HeadNode* Graph) //그래프 출력 함수
 	GraphNode* p;
 	for (int i = 0; i < Graph->n; i++)
 		{
-			printf("\nVertex number: %d", i); 
+			printf("\nVertex number: %d  ", i); 
 			p = Graph->headNode[i];
 			while (p)
 			{
-				printf(" -> %d", p->vertex);
+				printf(" [%d]", p->vertex);
 				p = p->link;
 			}
 			printf("\n");
@@ -158,12 +168,22 @@ int insertEdge(HeadNode* Graph, int u, int v)
 	node->link = Graph->headNode[u];
 	Graph->headNode[u] = node;
 	return 0;
+
+	
 }
 
+void Depth(HeadNode* Graph,int v)
+{
+	GraphNode* w;
+	visited_Depth[v]=1; //vertex를 방문했음을 표시
+	printf("%d ",v); //방문한 vertex 출력
 
-
-
-
+	for(w=Graph->headNode[v];w;w=w->link)
+	{
+		if(!visited_Depth[w->vertex]) //방문한적이 없으면 재귀함수 발동
+			Depth(Graph,w->vertex);
+	}
+}
 
 
 
