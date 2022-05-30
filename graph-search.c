@@ -17,15 +17,16 @@ typedef struct headNode {
 
 //함수선언
 void initialize(HeadNode** );
-void insertVertex(HeadNode* Graph);
+int insertVertex(HeadNode* Graph);
 void printGraph(HeadNode* Graph);
 int freeGraph(HeadNode* graph);
+int insertEdge(HeadNode* Graph, int v1, int v2);
 
 
 int main()
 {
 	char command;
-	int v1, v2;
+	int u, v;
     HeadNode* Graph = NULL;
 
 	printf("[----- [조정동] [2017015041] -----]\n");
@@ -53,7 +54,12 @@ int main()
 		case 'v': case 'V':
 			insertVertex(Graph);
 			break;
-
+		case 'e' : case 'E':
+			printf("Enter two vertices = ");
+			scanf("%d %d", &u, &v);
+			insertEdge(Graph, u, v);
+			insertEdge(Graph, v, u);
+		break;
 
 
 		case 'p': case 'P':
@@ -87,15 +93,24 @@ void initialize(HeadNode** Graph) //그래프 초기화 함수
 	}
 }
 
-void insertVertex(HeadNode* Graph)
-{
+int insertVertex(HeadNode* Graph)
+{	
+	//Graph가 초기화 되지 않을 경우 오류 출력
+	if(Graph == NULL){
+        printf("AAAAAA!!! Error!!!! initialize it!!\n");
+        return 1;
+    }
+
 	//Graph의 개수가 10보다 많을 경우 오류 출력
-	if(((Graph->n)+1)>max_Vertex)
-		printf("AAAAAA!!! Error!!!!\n");
+	if(((Graph->n)+1)>max_Vertex){
+		printf("AAAAAA!!! Error!!!! Too many vertices!! \n");
+		return 1;
+	}
 
 	else{
 		Graph->n++;
-		printf("Vertax %d insert perfect!!", Graph->n);
+		printf("\nTotal of %d vertices were entered perfectly!! ", Graph->n);
+		return 0;
 	}	
 }
 
@@ -121,6 +136,29 @@ int freeGraph(HeadNode* graph) //그래프 초기화 함수
 	return 1;
 }
 
+int insertEdge(HeadNode* Graph, int u, int v)
+{
+	//Graph가 초기화 되지 않을 경우 오류 출력
+	if(Graph == NULL){
+        printf("AAAAAA!!! Error!!!! initialize it!!\n");
+        return 1;
+    }
+
+	//존재하지 않는 Vertex를 선택한 경우 오류 출력
+	if (u >= Graph->n || v >= Graph->n || u < 0 || v < 0)
+	{
+		printf("\nAAAAAA!!! Error!!!! Entered vertex is not in the graph!!\n");
+		return 1;
+	}
+
+	//node 생성
+	GraphNode* node = (GraphNode*)malloc(sizeof(GraphNode));
+
+	node->vertex = v; //node를 정점에 연결
+	node->link = Graph->headNode[u];
+	Graph->headNode[u] = node;
+	return 0;
+}
 
 
 
