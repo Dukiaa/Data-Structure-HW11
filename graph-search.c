@@ -27,7 +27,7 @@ void printGraph(HeadNode* Graph);
 int freeGraph(HeadNode* graph);
 int insertEdge(HeadNode* Graph, int v, int u);
 void Depth(HeadNode *Graph, int v);
-void bfs (HeadNode *g, int v);
+void Breath(HeadNode *g, int v);
 
 int main()
 {
@@ -79,7 +79,7 @@ int main()
 		case 'b' : case 'B':
 		printf("Enter the vertex you want to explore: = ");
 			scanf("%d", &v);
-			bfs(Graph,v); //너비우선탐색
+			Breath(Graph,v); //너비우선탐색
 			printf("\n");
 			//너비우선탐색 후 visitied 배열 초기화 - 안하면 계속 탐색 불가
 			for(int i=0;i<max_Vertex;i++)
@@ -198,7 +198,7 @@ void Depth(HeadNode* Graph,int v)
 }
 
 
-void bfs (HeadNode *g, int v)
+void  Breath(HeadNode *g, int v)
 {
     int queue[max_Vertex];
     int rear=0;
